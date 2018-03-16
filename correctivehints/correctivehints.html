@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="hints.js"></script>
+  <style>
+    #player {
+      position: absolute;
+      bottom: 150px;
+      right: 500px;
+    }
+
+    #quiz {
+      position: absolute;
+      bottom: 150px;
+      right: 500px;
+      display: none;
+      width: 530px;
+      height: 280px;
+      padding: 50px;
+      border: 5px solid gray;
+      background: white;
+    }
+  </style>
+</head>
+
+<body>
+  <button id="returntovideoatquiz"
+          onclick="setCurrentTime(0)" 
+          style="display:none;">
+    Return to Video Section when Quiz Appeared
+  </button>
+  <button id="showquiz" 
+          onclick="document.getElementById('quiz').style.display = 'inline'"
+          style="display:none;">
+    Show Quiz
+  </button> 
+  
+  <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+    <div id="player"></div>
+
+    <div id="quiz">Every time I pedal once in the 52-18 gear combination (where 52 is the number of teeth the front gear has,
+      and 18 is the number of teeth the back gear has), what happens?<br><br><br>
+      <iframe name="result" style="display:none;"></iframe>
+      <form id="quizform" target = "result">
+        <input type="radio" name="answer" value="A" id ="radioA">The back gear spins 52÷18 times<br>
+        <input type="radio" name="answer" value="B" id="radioB">The back gear spins 18 times<br>
+        <input type="radio" name="answer" value="C" id="radioC">The back gear spins 18÷52 times<br>
+        <input type="radio" name="answer" value="D" id="radioD">The back gear does not spin<br>
+        <input type="radio" name="answer" value="E" id="radioE">I don't know what a gear combination is<br>
+        <button id="submit">Submit</button>
+        <button id="gotovideosection" 
+                style="display:none;">
+          Go To Relevant Video Clip
+        </button>
+        <button id="exitform" 
+                style="display:none;">
+          Close Quiz
+        </button>     
+      </form>
+
+    </div>
+
+    <script>
+      var stopPlayAt = 316; // Stop play at time in seconds
+      var stopPlayTimer;   // Reference to settimeout call
+  
+      // 2. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // 3. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          videoId: 'crTiE8zfFso',
+          playerVars: {'autoplay': 0, 'wmode': 'transparent', 'fs': 0, 'controls':1, 'rel':0, 'modestbranding':1, 'showinfo':0},
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange,
+          }
+        });
+        document.getElementById('player').style['z-index']=-10;
+        document.getElementById('player').style['-webkit-transform']='translateZ(0)';
+      }
+      //document.getElementById('player').style['z-index']=-10;
+    //document.getElementById('player').style['-webkit-transform']='translateZ(0)';
+
+      // 4. The API will call this function when the video player is ready.
+      function onPlayerReady(event) {
+        event.target.loadVideo();
+      }
+
+      // 5. The API calls this function when the player's state changes.
+      //    The function indicates that when playing a video (state=1),
+      //    the player should play for six seconds and then stop.
+      var done = false;
+      function onPlayerStateChange(event) {
+       var time, rate, remainingTime;
+       clearTimeout(stopPlayTimer);
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+          time = player.getCurrentTime();
+          // Add .4 of a second to the time in case it's close to the current time
+          // (The API kept returning ~9.7 when hitting play after stopping at 10s)
+          if (time + .4 < stopPlayAt) {
+            rate = player.getPlaybackRate();
+            remainingTime = (stopPlayAt - time) / rate;
+            stopPlayTimer = setTimeout(stopVideo, remainingTime * 1000);
+          }
+        }
+      }
+      function stopVideo() {
+        player.pauseVideo();
+        document.getElementById('quiz').style.display="block";
+      }
+
+      function setCurrentTime(slideNum) {
+        var object = [ stopPlayAt, 84 ];
+        player.seekTo(object[slideNum]);
+      }
+    </script>
+  </body>
