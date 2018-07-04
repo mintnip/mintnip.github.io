@@ -30,6 +30,17 @@
     $(".menu-toggle > .fa-bars, .menu-toggle > .fa-times").toggleClass("fa-bars fa-times");
   });
 
+  // Closes responsive menu when document is clicked
+  $(document).click(function(event) {
+    if(!$(event.target).closest(".menu-toggle").length) {
+      if($(".menu-toggle").hasClass("active")) {
+          $("#sidebar-wrapper").removeClass("active");
+        $(".menu-toggle").removeClass("active");
+          $(".menu-toggle > .fa-bars, .menu-toggle > .fa-times").toggleClass("fa-bars fa-times");
+        }
+    }
+  });
+
   // Scroll to top button appear
   $(document).scroll(function() {
     var scrollDistance = $(this).scrollTop();
