@@ -12,9 +12,12 @@
       gtag('config', 'UA-109680634-1');
     </script>
 
-    <script language="javascript" type="text/javascript">
+    <script>
       // make sure to do this onLoad, for example jQuery's $()
-      var resume_var = "files/Anne Xie EdTech PM Resume_2019Mar27.pdf";
+      function resumeFunction() {
+        var resume_var = "files/Anne Xie EdTech PM Resume_2019Mar27.pdf";
+        document.getElementById("resumeLink").setAttribute("href",resume_var);
+      };
     </script>
 
     <meta charset="utf-8">
@@ -37,7 +40,7 @@
 
   </head>
 
-  <body id="page-top">
+  <body id="page-top" onload="resumeFunction()">
     <!-- Navigation -->
     <a class="menu-toggle rounded" href="#">
       <i class="fa fa-bars"></i>
@@ -51,7 +54,7 @@
           <a class="js-scroll-trigger" href="#about">About</a>
         </li>
         <li class="sidebar-nav-item">
-          <a class="js-scroll-trigger" href="resume.html" onclick="location.href=resume_var;return false;">Resume</a>
+          <a class="js-scroll-trigger" id="resumeLink">Resume</a>
         </li>
         <!--<li class="sidebar-nav-item">
           <a class="js-scroll-trigger" href="#services">Services</a>
@@ -87,7 +90,7 @@
             </p>
             <p class="lead">
               <h3>Background
-                <a href="resume.html" onclick="location.href=resume_var;return false;">
+                <a id="resumeLink">
                   (Resume)
                 </a>
               </h3>
@@ -343,7 +346,7 @@
       <div class="container">
         <ul class="list-inline mb-5">
           <li class="list-inline-item">
-            <a href="resume.html" onclick="location.href=resume_var;return false;">
+            <a id="resumeLink">
               <i class="fa fa-file-text fa-fw fa-3x"></i>
             </a>
           </li>
